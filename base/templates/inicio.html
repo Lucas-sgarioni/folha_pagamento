@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+{% for dado in dados %}
+  <div class="col-md-6">
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+      <div class="col p-4 d-flex flex-column justify-content-center">
+        <h3 class="mb-4">{{ dado.titulo }}</h3>
+
+        {% if dado.descricao %}
+          <p class="mb-3">{{ dado.descricao}}</p>
+        {% endif %}
+
+        {% for botao in dado.botoes %}
+          <a href="{{ botao.link }}" class="btn btn-primary d-inline-flex align-items-center mb-2 justify-content-center me-2">{{ botao.nome }}</a>
+        {% endfor %}
+
+      </div>
+      <div class="col-auto d-none d-lg-block">
+        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+{% endblock %}

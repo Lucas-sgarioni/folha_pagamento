@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block conteudo %}
+  <div class="row mb-2">
+    <div class="col-md-6">
+        {% if sucesso %}
+        <p class="alert alert-sucess">Funcionário cadastrado com sucesso!</p>
+        {% else %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button class="btn btn-primary" type="submit">Cadastrar</button>
+        </form>
+        {% endif %}
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('.cpf-mask').mask('000.000.000-00');
+      $('.money-mask').mask('R$ 000.000.000,00', {reverse: true});
+    });
+  </script>
+{% endblock %}

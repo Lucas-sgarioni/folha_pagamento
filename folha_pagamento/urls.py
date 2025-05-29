@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from base.views import inicio, lancamento, relatorio
+from base.views import inicio
 from cadastro.views import cadastrar, editar
+from lancamento.views import lancamento
+from relatorio.views import relatorio
 
 urlpatterns = [
     path('', inicio, name='home'),

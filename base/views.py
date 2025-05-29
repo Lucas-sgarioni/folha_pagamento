@@ -33,10 +33,3 @@ def inicio(request):
         'dados' : dados
     }
     return render(request, 'inicio.html', contexto)
-
-
-def lancamento(request):
-    return render(request, 'lancamento.html')
-
-def relatorio(request):
-    return render(request, 'relatorio.html')

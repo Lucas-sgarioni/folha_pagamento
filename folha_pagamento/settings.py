@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     'base',
     'cadastro',
+    'lancamento',
+    'relatorio',
 ]
 
 MIDDLEWARE = [

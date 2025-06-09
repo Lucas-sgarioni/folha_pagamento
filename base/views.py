@@ -9,7 +9,7 @@ def inicio(request):
         'titulo': 'Cadastro de funcionários',
         'botoes': [
             {'nome': 'Cadastrar', 'link': reverse('cadastro')},
-            {'nome': 'Editar', 'link': reverse('editar')}
+            {'nome': 'Editar', 'link': reverse('buscar_funcionario')}
         ]
     })
 

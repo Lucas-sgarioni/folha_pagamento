@@ -1,5 +1,5 @@
 from django import forms
-from cadastro.models import Cadastro, Editar
+from cadastro.models import Cadastro
 
 from decimal import Decimal
 import re
@@ -54,14 +54,3 @@ class CadastrarForm(forms.ModelForm):
         except Exception:
             raise forms.ValidationError('Digite um valor válido em reais.')
 
-
-class EditarForm(forms.ModelForm):
-
-    class Meta:
-        model = Editar
-        fields = [
-            'nome',
-            'valor_hora',
-            'modalidade_contrato',
-            'situacao_cadastro',
-        ]

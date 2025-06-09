@@ -17,14 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from base.views import inicio
-from cadastro.views import cadastrar, editar
+from cadastro. views import cadastrar, buscar_funcionario, editar_funcionario
 from lancamento.views import lancamento
 from relatorio.views import relatorio
 
 urlpatterns = [
     path('', inicio, name='home'),
     path('cadastro/', cadastrar, name='cadastro'),
-    path('editar/', editar, name='editar'),
+    path('buscar/', buscar_funcionario, name='buscar_funcionario'),
+    path('editar/<int:pk>/', editar_funcionario, name='editar_funcionario'),
     path('lancamento/', lancamento, name='lancamento'),
     path('relatorio/', relatorio, name='relatorio'),
     path('admin/', admin.site.urls),

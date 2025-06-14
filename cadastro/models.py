@@ -30,3 +30,5 @@ class Cadastro(models.Model):
 
     editado_em = models.DateTimeField(verbose_name='editado em', auto_now=True)
 
+    def __str__(self):
+        return self.nome

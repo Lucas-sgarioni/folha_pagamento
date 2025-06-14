@@ -19,6 +19,7 @@ from django.urls import path
 from base.views import inicio
 from cadastro. views import cadastrar, buscar_funcionario, editar_funcionario
 from lancamento.views import lancamento
+
 from relatorio.views import relatorio
 
 urlpatterns = [

@@ -22,6 +22,10 @@ ANO_CHOICES = [
 ]
 
 class FiltroLancamentoForm(forms.Form):
-    nome = forms.ModelChoiceField(queryset=Cadastro.objects.all(), label='Funcionário')
+    nome = forms.ModelChoiceField(queryset=Cadastro.objects.order_by('nome'), label='Funcionário')
     mes = forms.ChoiceField(choices=MESES_CHOICES, label='Mês')
     ano = forms.ChoiceField(choices=ANO_CHOICES, label='Ano')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['nome'].queryset = Cadastro.objects.filter(situacao_cadastro='AT').order_by('nome')

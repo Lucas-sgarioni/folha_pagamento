@@ -2,38 +2,39 @@
 {% load bootstrap5 %}
 
 {% block conteudo %}
+<main class="container">
+  <form method="get">
+    {{ form.as_p }}
+    <button type="submit">Filtrar</button>
+  </form>
 
-<form method="get">
-  {{ form.as_p }}
-  <button type="submit">Filtrar</button>
-</form>
+  {% if registros %}
+  <form method="post">
+    {% csrf_token %}
 
-{% if registros %}
-<form method="post">
-  {% csrf_token %}
+    <input type="hidden" name="nome" value="{{ form.cleaned_data.nome.id }}">
+    <input type="hidden" name="mes" value="{{ form.cleaned_data.mes }}">
+    <input type="hidden" name="ano" value="{{ form.cleaned_data.ano }}">
 
-  <input type="hidden" name="nome" value="{{ form.cleaned_data.nome.id }}">
-  <input type="hidden" name="mes" value="{{ form.cleaned_data.mes }}">
-  <input type="hidden" name="ano" value="{{ form.cleaned_data.ano }}">
+    <table>
+      <tr>
+        <th>Data</th><th>Dia</th><th>Entrada Manhã</th><th>Saída Manhã</th>
+        <th>Entrada Tarde</th><th>Saída Tarde</th>
+      </tr>
+      {% for r in registros %}
+      <tr>
+        <td>{{ r.dia_semana }}</td>
+        <td>{{ r.dia|date:"d/m/Y" }}</td>
+        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_entrada_manha' value="{{ r.lancamento.entrada_manha }}"></td>
+        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_saida_manha' value="{{ r.lancamento.saida_manha }}"></td>
+        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_entrada_tarde' value="{{ r.lancamento.entrada_tarde }}"></td>
+        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_saida_tarde' value="{{ r.lancamento.saida_tarde }}"></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <button type="submit">Salvar Lançamentos</button>
+  </form>
+  {% endif %}
 
-  <table>
-    <tr>
-      <th>Data</th><th>Dia</th><th>Entrada Manhã</th><th>Saída Manhã</th>
-      <th>Entrada Tarde</th><th>Saída Tarde</th>
-    </tr>
-    {% for r in registros %}
-    <tr>
-      <td>{{ r.dia|date:"d/m/Y" }}</td>
-      <td>{{ r.dia_semana }}</td>
-      <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_entrada_manha' value="{{ r.lancamento.entrada_manha }}"></td>
-      <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_saida_manha' value="{{ r.lancamento.saida_manha }}"></td>
-      <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_entrada_tarde' value="{{ r.lancamento.entrada_tarde }}"></td>
-      <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_saida_tarde' value="{{ r.lancamento.saida_tarde }}"></td>
-    </tr>
-    {% endfor %}
-  </table>
-  <button type="submit">Salvar Lançamentos</button>
-</form>
-{% endif %}
-
+</main>
 {% endblock %}

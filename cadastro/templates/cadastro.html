@@ -2,6 +2,7 @@
 {% load bootstrap5 %}
 
 {% block conteudo %}
+<main class="container">
   <div class="row mb-2">
     <div class="col-md-6">
         {% if sucesso %}
@@ -25,4 +26,5 @@
       $('.money-mask').mask('R$ 000.000.000,00', {reverse: true});
     });
   </script>
+</main>
 {% endblock %}

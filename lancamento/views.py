@@ -17,13 +17,14 @@ def lancamento(request):
         dias = gerar_dias_do_mes(ano, mes)
 
         for dia in dias:
-            lancamento, _ = LancamentoHora.objects.get_or_create(
+            lancamento, _ = LancamentoHora.objects.filter(
                 nome=funcionario,
                 data=dia['data']
-            )
+            ).first()
+
             registros.append({
-                'dia': dia['data'],
                 'dia_semana': dia['dia_semana'],
+                'dia': dia['data'],
                 'lancamento': lancamento,
             })
 
@@ -37,15 +38,22 @@ def lancamento(request):
 
         for dia in dias:
             data = dia['data']
-            lancamento, _ = LancamentoHora.objects.get_or_create(
+            prefix = data.strftime('%Y-%m-%d')
+
+            entrada_manha = request.POST.get(f'{prefix}_entrada_manha') or None
+            saida_manha = request.POST.get(f'{prefix}_saida_manha') or None
+            entrada_tarde = request.POST.get(f'{prefix}_entrada_tarde') or None
+            saida_tarde = request.POST.get(f'{prefix}_saida_tarde') or None
+
+            if entrada_manha or saida_manha or entrada_tarde or saida_tarde:
+                lancamento, created = LancamentoHora.objects.get_or_create(
                 nome=funcionario,
                 data=data
             )
-            prefix = data.strftime('%Y-%m-%d')
-            lancamento.entrada_manha = request.POST.get(f'{prefix}_entrada_manha') or None
-            lancamento.saida_manha = request.POST.get(f'{prefix}_saida_manha') or None
-            lancamento.entrada_tarde = request.POST.get(f'{prefix}_entrada_tarde') or None
-            lancamento.saida_tarde = request.POST.get(f'{prefix}_saida_tarde') or None
+            lancamento.entrada_manha = entrada_manha
+            lancamento.saida_manha = saida_manha
+            lancamento.entrada_tarde = entrada_tarde
+            lancamento.saida_tarde = saida_tarde
             lancamento.save()
 
         return redirect('lancamento')

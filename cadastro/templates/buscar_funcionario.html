@@ -2,26 +2,27 @@
 {% load bootstrap5 %}
 
 {% block conteudo %}
-<div class="d-flex justify-content-center align-intems-center py-4">
-    <div class="w-100 m-auto">
-        <h2>Buscar Funcionário</h2>
-        <form method="get">
-            <input type="text" name="q" placeholder="Nome ou CPF">
-            <button class="btn btn-primary" type="submit">Buscar</button>
-        </form>
+<main class="container">
+    <div class="d-flex justify-content-center align-intems-center py-4">
+        <div class="w-100 m-auto">
+            <h2>Buscar Funcionário</h2>
+            <form method="get">
+                <input type="text" name="q" placeholder="Nome ou CPF">
+                <button class="btn btn-primary" type="submit">Buscar</button>
+            </form>
+        </div>
     </div>
-</div>
-{% if resultado %}
-    <ul>
-        {% for funcionario in resultado %}
-            <li>
-                {{ funcionario.nome }} - {{ funcionario.cpf }}
-                <a href="{% url 'editar_funcionario' funcionario.pk %}">Editar</a>
-            </li>
-        {% endfor %}
-    </ul>
-{% elif request.GET.q %}
-    <p>Nenhum funcionário encontrado.</p>
-{% endif %}
-
+    {% if resultado %}
+        <ul>
+            {% for funcionario in resultado %}
+                <li>
+                    {{ funcionario.nome }} - {{ funcionario.cpf }}
+                    <a href="{% url 'editar_funcionario' funcionario.pk %}">Editar</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif request.GET.q %}
+        <p>Nenhum funcionário encontrado.</p>
+    {% endif %}
+</main>
 {% endblock %}

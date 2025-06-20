@@ -8,6 +8,7 @@ from datetime import datetime
 def lancamento(request):
     form = FiltroLancamentoForm(request.GET or None)
     registros = []
+    funcionario = None
 
     if request.method == 'GET' and form.is_valid():
         funcionario = form.cleaned_data['nome']
@@ -17,7 +18,7 @@ def lancamento(request):
         dias = gerar_dias_do_mes(ano, mes)
 
         for dia in dias:
-            lancamento, _ = LancamentoHora.objects.filter(
+            lancamento = LancamentoHora.objects.filter(
                 nome=funcionario,
                 data=dia['data']
             ).first()
@@ -49,19 +50,19 @@ def lancamento(request):
                 lancamento, created = LancamentoHora.objects.get_or_create(
                 nome=funcionario,
                 data=data
-            )
-            lancamento.entrada_manha = entrada_manha
-            lancamento.saida_manha = saida_manha
-            lancamento.entrada_tarde = entrada_tarde
-            lancamento.saida_tarde = saida_tarde
-            lancamento.save()
+                )
+                lancamento.entrada_manha = entrada_manha
+                lancamento.saida_manha = saida_manha
+                lancamento.entrada_tarde = entrada_tarde
+                lancamento.saida_tarde = saida_tarde
+                lancamento.save()
 
         return redirect('lancamento')
 
     return render(request, 'lancamento.html', {
         'form': form,
         'registros': registros,
-        'funcionario_id': funcionario.id if request.method == 'GET' and form.is_valid() else '',
+        'funcionario_id': funcionario.id if funcionario else '',
         'mes': mes if request.method == 'GET' and form.is_valid() else '',
         'ano': ano if request.method == 'GET' and form.is_valid() else '',
     })

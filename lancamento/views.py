@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import FiltroLancamentoForm
 from .models import LancamentoHora
-from cadastro.models import Cadastro  # Importa o modelo correto de funcionários
+from cadastro.models import Cadastro
 from .utils import gerar_dias_do_mes
-from datetime import datetime
+
 
 def lancamento(request):
     form = FiltroLancamentoForm(request.GET or None)

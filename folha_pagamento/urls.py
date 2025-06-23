@@ -19,8 +19,7 @@ from django.urls import path
 from base.views import inicio
 from cadastro. views import cadastrar, buscar_funcionario, editar_funcionario
 from lancamento.views import lancamento
-
-from relatorio.views import relatorio
+from relatorio.views import relatorio, buscar_relatorio
 
 urlpatterns = [
     path('', inicio, name='home'),
@@ -28,6 +27,7 @@ urlpatterns = [
     path('buscar/', buscar_funcionario, name='buscar_funcionario'),
     path('editar/<int:pk>/', editar_funcionario, name='editar_funcionario'),
     path('lancamento/', lancamento, name='lancamento'),
+    path('relatorio/<int:pk>/', buscar_funcionario, name='buscar_relatorio'),
     path('relatorio/', relatorio, name='relatorio'),
     path('admin/', admin.site.urls),
 ]

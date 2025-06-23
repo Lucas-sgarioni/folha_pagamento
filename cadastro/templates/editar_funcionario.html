@@ -2,25 +2,30 @@
 {% load bootstrap5 %}
 
 {% block conteudo %}
+<main class="container">
+    <div class="d-flex justify-content-center align-intems-center py-4">
+        <div class="w-100 m-auto">
+            <h2>Editando: {{ funcionario.nome }}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary" type="submit">Salvar</button>
+                <a href="{% url 'buscar_funcionario' %}">Voltar</a>
+            </form>
 
-<h2>Editando: {{ funcionario.nome }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Salvar</button>
-    <a href="{% url 'buscar_funcionario' %}">Voltar</a>
-</form>
+            <p>Criado em: {{ funcionario.criado_em|date:"d/m/Y H:i" }}</p>
+            <p>Última edição: {{ funcionario.editado_em|date:"d/m/Y H:i" }}</p>
 
-<p>Criado em: {{ funcionario.criado_em|date:"d/m/Y H:i" }}</p>
-<p>Última edição: {{ funcionario.editado_em|date:"d/m/Y H:i" }}</p>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-<script>
-$(document).ready(function(){
-    $('.cpf-mask').mask('000.000.000-00');
-    $('.money-mask').mask('R$ 000.000.000,00', {reverse: true});
-});
-</script>
+            <script>
+            $(document).ready(function(){
+                $('.cpf-mask').mask('000.000.000-00');
+                $('.money-mask').mask('R$ 000.000.000,00', {reverse: true});
+            });
+            </script>
+        </div>
+    </div>
+</main>
 {% endblock %}

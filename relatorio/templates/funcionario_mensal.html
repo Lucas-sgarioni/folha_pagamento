@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load bootstrap5 %}
+
+{% block conteudo %}
+<main>  
+    <div class="container bg-white p-4 shadow rounded">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="mb-0">Relatório de Horas</h2>
+                <small class="text-muted">{{ mes }}/{{ ano }}</small>
+            </div>
+            <a href="{% url 'relatorio_funcionario_pdf' funcionario.id ano mes %}" class="btn btn-outline-primary">
+                📄 Gerar PDF
+            </a>
+        </div>
+
+        <div class="mb-3">
+            <strong>Funcionário:</strong> {{ funcionario.nome }}
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Data</th>
+                        <th>Entrada Manhã</th>
+                        <th>Saída Manhã</th>
+                        <th>Entrada Tarde</th>
+                        <th>Saída Tarde</th>
+                        <th>Horas Extras</th>
+                        <th>Horas Atraso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reg in registros %}
+                    <tr>
+                        <td>{{ reg.data|date:"d/m/Y" }}</td>
+                        <td>{{ reg.entrada_manha|default:"--" }}</td>
+                        <td>{{ reg.saida_manha|default:"--" }}</td>
+                        <td>{{ reg.entrada_tarde|default:"--" }}</td>
+                        <td>{{ reg.saida_tarde|default:"--" }}</td>
+                        <td>{{ reg.horas_extras }}</td>
+                        <td>{{ reg.horas_atraso }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light fw-bold">
+                    <tr>
+                        <td colspan="5" class="text-end">Totais:</td>
+                        <td>{{ total_extras }}</td>
+                        <td>{{ total_atrasos }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</main>
+
+{% endblock %}

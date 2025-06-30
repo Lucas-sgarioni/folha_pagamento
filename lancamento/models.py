@@ -21,10 +21,10 @@ class LancamentoHora(models.Model):
         ordering = ['data']
 
     # Jornada padrão
-    JORNADA_ENTRADA_MANHA = time(8, 0)
-    JORNADA_SAIDA_MANHA = time(12, 0)
-    JORNADA_ENTRADA_TARDE = time(13, 0)
-    JORNADA_SAIDA_TARDE = time(17, 0)
+    JORNADA_ENTRADA_MANHA = time(7, 45)
+    JORNADA_SAIDA_MANHA = time(11, 45)
+    JORNADA_ENTRADA_TARDE = time(13, 22)
+    JORNADA_SAIDA_TARDE = time(17, 55)
 
     def _comparar_horario(self, real, previsto):
         """Retorna (atraso_em_minutos, extra_em_minutos)"""

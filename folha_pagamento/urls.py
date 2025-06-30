@@ -27,7 +27,7 @@ urlpatterns = [
     path('buscar/', buscar_funcionario, name='buscar_funcionario'),
     path('editar/<int:pk>/', editar_funcionario, name='editar_funcionario'),
     path('lancamento/', lancamento, name='lancamento'),
-    path('relatorio/', relatorio_mensal_consolidado, name='mensal_consolidado'),
-    path('relatorio/', relatorio_funcionario_mensal, name='relatorio_funcionario_mensal'),
+    path('consolidado_mensal/', relatorio_mensal_consolidado, name='relatorio_mensal_consolidado'),
+    path('funcionario_mensal/', relatorio_funcionario_mensal, name='relatorio_funcionario_mensal'),
     path('admin/', admin.site.urls),
 ]

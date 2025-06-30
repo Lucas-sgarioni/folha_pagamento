@@ -25,7 +25,8 @@ def inicio(request):
         'titulo': 'Relatórios',
         'descricao': 'Gerar o relatório de horas trabalhadas e horas extras a receber',
         'botoes': [
-            {'nome': 'Ver Relatórios', 'link': reverse('relatorio')}
+            {'nome': 'Relatório mensal', 'link': reverse('relatorio_mensal_consolidado')},
+            {'nome': 'Relatório por funcionário', 'link': reverse('relatorio_funcionario_mensal')}
         ]
     })
     

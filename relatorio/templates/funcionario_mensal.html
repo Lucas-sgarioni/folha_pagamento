@@ -3,70 +3,50 @@
 
 {% block conteudo %}
 <main class="container">
-  <form method="get">
+    <form method="get" class="mb-4">
     {{ form.as_p }}
-    <button type="submit">Filtrar</button>
-  </form>
+    <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+    </form>
 
-  {% if registros %}
-  <form method="post">
-    {% csrf_token %}
+    {% if registros %}
+    <h2>Relatório de {{ funcionario.nome }} - {{ mes }}/{{ ano }}</h2>
 
-    <input type="hidden" name="nome" value="{{ form.cleaned_data.nome.id }}">
-    <input type="hidden" name="mes" value="{{ form.cleaned_data.mes }}">
-    <input type="hidden" name="ano" value="{{ form.cleaned_data.ano }}">
-
-    <div class="container bg-white p-4 shadow rounded">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="mb-0">Relatório de Horas</h2>
-                <small class="text-muted">{{ mes }}/{{ ano }}</small>
-            </div>
-            <a href="{% url 'relatorio_funcionario_pdf' funcionario.id ano mes %}" class="btn btn-outline-primary">
-                📄 Gerar PDF
-            </a>
-        </div>
-
-        <div class="mb-3">
-            <strong>Funcionário:</strong> {{ funcionario.nome }}
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle text-center">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Data</th>
-                        <th>Entrada Manhã</th>
-                        <th>Saída Manhã</th>
-                        <th>Entrada Tarde</th>
-                        <th>Saída Tarde</th>
-                        <th>Horas Extras</th>
-                        <th>Horas Atraso</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for reg in registros %}
-                    <tr>
-                        <td>{{ reg.data|date:"d/m/Y" }}</td>
-                        <td>{{ reg.entrada_manha|default:"--" }}</td>
-                        <td>{{ reg.saida_manha|default:"--" }}</td>
-                        <td>{{ reg.entrada_tarde|default:"--" }}</td>
-                        <td>{{ reg.saida_tarde|default:"--" }}</td>
-                        <td>{{ reg.horas_extras }}</td>
-                        <td>{{ reg.horas_atraso }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot class="table-light fw-bold">
-                    <tr>
-                        <td colspan="5" class="text-end">Totais:</td>
-                        <td>{{ total_extras }}</td>
-                        <td>{{ total_atrasos }}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Data</th>
+            <th>Entrada Manhã</th>
+            <th>Saída Manhã</th>
+            <th>Entrada Tarde</th>
+            <th>Saída Tarde</th>
+            <th>Horas Extras</th>
+            <th>Horas de Atraso</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for r in registros %}
+        <tr>
+            <td>{{ r.data|date:"d/m/Y" }}</td>
+            <td>{{ r.entrada_manha }}</td>
+            <td>{{ r.saida_manha }}</td>
+            <td>{{ r.entrada_tarde }}</td>
+            <td>{{ r.saida_tarde }}</td>
+            <td>{{ r.horas_extras }}</td>
+            <td>{{ r.horas_atraso }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr class="fw-bold">
+            <td colspan="5" class="text-end">Totais:</td>
+            <td>{{ total_extras }}</td>
+            <td>{{ total_atrasos }}</td>
+        </tr>
+        </tfoot>
+    </table>
+    {% elif ano and mes %}
+    <p>Nenhum lançamento encontrado para {{ funcionario.nome }} em {{ mes }}/{{ ano }}.</p>
+    {% endif %}
 </main>
 
 {% endblock %}

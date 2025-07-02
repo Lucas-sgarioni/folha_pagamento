@@ -2,46 +2,36 @@
 {% load bootstrap5 %}
 
 {% block conteudo %}
-<main>
-    <div class="container bg-white p-4 shadow rounded">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="mb-0">Relatório Mensal Consolidado</h2>
-                <small class="text-muted">{{ mes }}/{{ ano }}</small>
-            </div>
-            <a href="{% url 'relatorio_consolidado_pdf' ano mes %}" class="btn btn-outline-primary">
-                📄 Gerar PDF
-            </a>
-        </div>
+<main class="container">
+    <h2>Relatório mensal de Horas Extras</h2>
 
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center align-middle">
-                <thead class="table-secondary">
-                    <tr>
-                        <th>Funcionário</th>
-                        <th>Horas Extras</th>
-                        <th>Valor Hora Extra</th>
-                        <th>Total a Pagar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for func in funcionarios %}
-                    <tr>
-                        <td>{{ func.nome }}</td>
-                        <td>{{ func.total_horas_extras|floatformat:2 }}</td>
-                        <td>R$ {{ func.valor_hora_extra|floatformat:2 }}</td>
-                        <td>R$ {{ func.valor_total|floatformat:2 }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4">Nenhum funcionário com horas extras neste mês.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <form method="get" class="mb-4">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Filtrar</button>
+    </form>
+
+    {% if resultados %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Funcionário</th>
+                <th>Valor Hora Extra</th>
+                <th>Total de Horas Extras</th>
+                <th>Total a Receber</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in resultados %}
+            <tr>
+                <td>{{ r.funcionario }}</td>
+                <td>R$ {{ r.valor_hora|floatformat:2 }}</td>
+                <td>{{ r.total_horas|floatformat:2 }} h</td>
+                <td><strong>R$ {{ r.total_receber|floatformat:2 }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% endif %}
 </main>
-
-
 {% endblock %}

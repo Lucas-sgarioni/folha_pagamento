@@ -16,22 +16,39 @@
     <input type="hidden" name="mes" value="{{ form.cleaned_data.mes }}">
     <input type="hidden" name="ano" value="{{ form.cleaned_data.ano }}">
 
-    <table>
-      <tr>
-        <th>Data</th><th>Dia</th><th>Entrada Manhã</th><th>Saída Manhã</th>
-        <th>Entrada Tarde</th><th>Saída Tarde</th>
-      </tr>
-      {% for r in registros %}
-      <tr>
-        <td>{{ r.dia_semana }}</td>
-        <td>{{ r.dia|date:"d/m/Y" }}</td>
-        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_entrada_manha' value="{{ r.lancamento.entrada_manha }}"></td>
-        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_saida_manha' value="{{ r.lancamento.saida_manha }}"></td>
-        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_entrada_tarde' value="{{ r.lancamento.entrada_tarde }}"></td>
-        <td><input type="time" name='{{ r.dia|date:"Y-m-d" }}_saida_tarde' value="{{ r.lancamento.saida_tarde }}"></td>
-      </tr>
-      {% endfor %}
-    </table>
+  <table class="table table-striped">
+    <tr>
+      <th>Data</th><th>Dia</th><th>Entrada Manhã</th><th>Saída Manhã</th>
+      <th>Entrada Tarde</th><th>Saída Tarde</th><th>Dia todo como hora extra</th>
+    </tr>
+    {% for r in registros %}
+    <tr>
+      <td>{{ r.dia|date:"l" }}</td>
+      <td>{{ r.dia|date:"d/m/Y" }}</td>
+      <td>
+        <input type="time" class="form-control" name="{{ r.dia|date:'Y-m-d' }}_entrada_manha"
+              value="{{ r.lancamento.entrada_manha|time:'H:i' }}">
+      </td>
+      <td>
+        <input type="time" class="form-control" name="{{ r.dia|date:'Y-m-d' }}_saida_manha"
+              value="{{ r.lancamento.saida_manha|time:'H:i' }}">
+      </td>
+      <td>
+        <input type="time" class="form-control" name="{{ r.dia|date:'Y-m-d' }}_entrada_tarde"
+              value="{{ r.lancamento.entrada_tarde|time:'H:i' }}">
+      </td>
+      <td>
+        <input type="time" class="form-control" name="{{ r.dia|date:'Y-m-d' }}_saida_tarde"
+              value="{{ r.lancamento.saida_tarde|time:'H:i' }}">
+      </td>
+      <td class="text-center">
+        <input type="checkbox" name="{{ r.dia|date:'Y-m-d' }}_hora_extra_total"
+              {% if r.dia|date:'w' == '0' or r.dia|date:'w' == '6' %}checked{% endif %}>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
     <button type="submit">Salvar Lançamentos</button>
   </form>
   {% endif %}

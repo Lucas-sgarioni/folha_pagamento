@@ -3,6 +3,15 @@ from .forms import FiltroLancamentoForm
 from .models import LancamentoHora
 from cadastro.models import Cadastro
 from .utils import gerar_dias_do_mes
+from datetime import datetime
+from decimal import Decimal
+
+
+def parse_time(valor):
+    try:
+        return datetime.strptime(valor, "%H:%M").time()
+    except (ValueError, TypeError):
+        return None
 
 
 def lancamento(request):
@@ -41,21 +50,38 @@ def lancamento(request):
             data = dia['data']
             prefix = data.strftime('%Y-%m-%d')
 
-            entrada_manha = request.POST.get(f'{prefix}_entrada_manha') or None
-            saida_manha = request.POST.get(f'{prefix}_saida_manha') or None
-            entrada_tarde = request.POST.get(f'{prefix}_entrada_tarde') or None
-            saida_tarde = request.POST.get(f'{prefix}_saida_tarde') or None
+            entrada_manha = parse_time(request.POST.get(f'{prefix}_entrada_manha'))
+            saida_manha = parse_time(request.POST.get(f'{prefix}_saida_manha'))
+            entrada_tarde = parse_time(request.POST.get(f'{prefix}_entrada_tarde'))
+            saida_tarde = parse_time(request.POST.get(f'{prefix}_saida_tarde'))
 
-            if entrada_manha or saida_manha or entrada_tarde or saida_tarde:
+            # Verifica checkbox "dia todo como hora extra"
+            hora_extra_total = request.POST.get(f'{prefix}_hora_extra_total') == 'on'
+
+            if entrada_manha or saida_manha or entrada_tarde or saida_tarde or hora_extra_total:
                 lancamento, created = LancamentoHora.objects.get_or_create(
-                nome=funcionario,
-                data=data
+                    nome=funcionario,
+                    data=data
                 )
                 lancamento.entrada_manha = entrada_manha
                 lancamento.saida_manha = saida_manha
                 lancamento.entrada_tarde = entrada_tarde
                 lancamento.saida_tarde = saida_tarde
-                lancamento.save()
+
+                if hora_extra_total:
+                    total_minutos = 0
+                    for h1, h2 in [(entrada_manha, saida_manha), (entrada_tarde, saida_tarde)]:
+                        if h1 and h2:
+                            delta = (datetime.combine(data, h2) - datetime.combine(data, h1)).total_seconds() / 60
+                            total_minutos += delta
+
+                    lancamento.horas_extras = Decimal(round(total_minutos / 60, 2))
+                    lancamento.horas_atraso = Decimal(0)
+                    # Salva sem recalcular para usar o valor manual
+                    lancamento.save()
+                else:
+                    # Salva normalmente, disparando o cálculo do save()
+                    lancamento.save()
 
         return redirect('lancamento')
 

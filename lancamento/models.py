@@ -1,7 +1,7 @@
 from django.db import models
 from cadastro.models import Cadastro
 from decimal import Decimal
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 class LancamentoHora(models.Model):
     nome = models.ForeignKey(Cadastro, on_delete=models.CASCADE, verbose_name='Funcionário')
@@ -30,8 +30,14 @@ class LancamentoHora(models.Model):
         """Retorna (atraso_em_minutos, extra_em_minutos)"""
         if real is None:
             return 0, 0
+        
         dt_real = datetime.combine(self.data, real)
         dt_previsto = datetime.combine(self.data, previsto)
+
+        # Se horário real for menor que o previsto, e a diferença for "muito grande", assume que passou da meia-noite
+        if real < previsto:
+            dt_real += timedelta(days=1)
+        
         diferenca = (dt_real - dt_previsto).total_seconds() / 60
 
         if diferenca > 0:

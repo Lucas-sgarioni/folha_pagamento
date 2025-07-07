@@ -11,15 +11,16 @@
   {% if registros %}
   <form method="post">
     {% csrf_token %}
-
-    <input type="hidden" name="nome" value="{{ form.cleaned_data.nome.id }}">
-    <input type="hidden" name="mes" value="{{ form.cleaned_data.mes }}">
-    <input type="hidden" name="ano" value="{{ form.cleaned_data.ano }}">
+    
+    <input type="hidden" name="nome" value="{{ funcionario_id }}">
+    <input type="hidden" name="mes" value="{{ mes }}">
+    <input type="hidden" name="ano" value="{{ ano }}">
 
   <table class="table table-striped">
     <tr>
       <th>Data</th><th>Dia</th><th>Entrada Manhã</th><th>Saída Manhã</th>
-      <th>Entrada Tarde</th><th>Saída Tarde</th><th>Dia todo como hora extra</th>
+      <th>Entrada Tarde</th><th>Saída Tarde</th><th>Feriado/Final de semana</th>
+      <th>Horas Extras</th>
     </tr>
     {% for r in registros %}
     <tr>
@@ -42,8 +43,15 @@
               value="{{ r.lancamento.saida_tarde|time:'H:i' }}">
       </td>
       <td class="text-center">
+          {% comment %}
+          Marcar automaticamente finais de semana (sábado=6, domingo=0)
+          Checkbox sempre visível para o caso de feriados em dias úteis
+          {% endcomment %}
         <input type="checkbox" name="{{ r.dia|date:'Y-m-d' }}_hora_extra_total"
-              {% if r.dia|date:'w' == '0' or r.dia|date:'w' == '6' %}checked{% endif %}>
+        {% if r.dia|date:'w' == '0' or r.dia|date:'w' == '6' %}checked disabled{% endif %}>
+      </td>
+      <td class="text-end">
+          {% if r.lancamento %}{{ r.lancamento.horas_extras|floatformat:2 }} h{% else %}-{% endif %}
       </td>
     </tr>
     {% endfor %}

@@ -3,29 +3,58 @@
 
 {% block conteudo %}
 <main class="container">
-    <div class="d-flex justify-content-center align-intems-center py-4">
-        <div class="w-100 m-auto">
-            <h2>Editando: {{ funcionario.nome }}</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button class="btn btn-primary" type="submit">Salvar</button>
-                <a href="{% url 'buscar_funcionario' %}">Voltar</a>
-            </form>
-
-            <p>Criado em: {{ funcionario.criado_em|date:"d/m/Y H:i" }}</p>
-            <p>Última edição: {{ funcionario.editado_em|date:"d/m/Y H:i" }}</p>
-
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
-            <script>
-            $(document).ready(function(){
-                $('.cpf-mask').mask('000.000.000-00');
-                $('.money-mask').mask('R$ 000.000.000,00', {reverse: true});
-            });
-            </script>
-        </div>
+  <div class="row mb-2">
+    <div class="col-md-6">
+        <form action="" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </form>
     </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('.cpf-mask').mask('000.000.000-00');
+      
+      // Aplica máscara monetária aos campos
+      $('.money-mask').each(function() {
+        // Remove formatação existente para evitar conflitos
+        let value = $(this).val().replace('R$ ', '').replace(/\./g, '').replace(',', '.');
+        $(this).val(value);
+      }).mask('R$ #.##0,00', {reverse: true, translation: {
+        '#': {pattern: /\d/, optional: true}
+      }});
+
+      // Restante do seu JavaScript para cálculo do valor_hora...
+      function calcularValorHora() {
+        var modalidade = $('#modalidade_contrato').val();
+        var salarioBase = $('#id_salario_base').val();
+        
+        if (modalidade === 'mensalista' && salarioBase) {
+          // Remove máscara e formatação do valor
+          var valorNumerico = salarioBase.replace('R$ ', '').replace(/\./g, '').replace(',', '.');
+          var salario = parseFloat(valorNumerico);
+          
+          if (!isNaN(salario)) {
+            // Calcula valor da hora (salario / 220 * 1.5)
+            var valorHora = (salario / 220) * 1.5;
+            
+            // Aplica máscara diretamente com jQuery Mask
+            $('#id_valor_hora').val(valorHora.toFixed(2).trigger('input'));
+            $('#id_valor_hora').prop('disabled', true);
+          }
+        } else if (modalidade === 'diarista') {
+          $('#id_valor_hora').prop('disabled', false);
+        }
+      }
+
+      $('#modalidade_contrato').change(calcularValorHora);
+      $('#id_salario_base').on('blur', calcularValorHora);
+      calcularValorHora(); // Executa ao carregar
+    });
+  </script>
 </main>
 {% endblock %}
